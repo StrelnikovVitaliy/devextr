@@ -1,7 +1,0 @@
-{
-  "items": [],
-  "baseTheme": "material.blue.light.compact",
-  "assetsBasePath": "../../../node_modules/devextreme/dist/css/",
-  "outputColorScheme": "base",
-  "base": true
-}
