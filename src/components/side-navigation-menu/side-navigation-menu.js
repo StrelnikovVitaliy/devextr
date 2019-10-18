@@ -1,10 +1,10 @@
-import React from 'react';
-import TreeView from 'devextreme-react/tree-view';
-import './side-navigation-menu.scss';
-
-import * as events from 'devextreme/events';
+import React from 'react'
+import TreeView from 'devextreme-react/tree-view'
+import './side-navigation-menu.scss'
+import * as events from 'devextreme/events'
 
 class SideNavigationMenu extends React.Component {
+
   render() {
     const {
       className,
@@ -12,8 +12,12 @@ class SideNavigationMenu extends React.Component {
       selectedItemChanged,
       selectedItem,
       onMenuReady,
+      menuOpened,
       ...rest
-    } = this.props;
+    } = this.props
+
+    const searchPlaceholder = menuOpened ? 'Search' : ''
+
     return (
       <div
         className={`${className} side-navigation-menu`}
@@ -33,73 +37,68 @@ class SideNavigationMenu extends React.Component {
             selectionMode={'single'}
             keyExpr={'path'}
             searchEnabled
-            searchEditorOptions={{stylingMode:"filled"}}
-
+            searchEditorOptions={{stylingMode: 'filled', placeholder: searchPlaceholder}}
           />
         </div>
       </div>
-    );
+    )
   }
 
   componentDidUpdate() {
-    this.updateMenu();
+    this.updateMenu()
   }
 
   onMenuInitialized = (event) => {
-    this.treeView = event.component;
-    event.component.option('deferRendering', false);
+    this.treeView = event.component
+    event.component.option('deferRendering', false)
   }
 
   updateSelection = (event) => {
-    const nodeClass = 'dx-treeview-node';
-    const selectedClass = 'dx-state-selected';
-    const leafNodeClass = 'dx-treeview-node-is-leaf';
-    const element = event.element;
+    const nodeClass = 'dx-treeview-node'
+    const selectedClass = 'dx-state-selected'
+    const leafNodeClass = 'dx-treeview-node-is-leaf'
+    const element = event.element
 
     const rootNodes = element.querySelectorAll(
       `.${nodeClass}:not(.${leafNodeClass})`
-    );
+    )
     Array.from(rootNodes).forEach(node => {
-      node.classList.remove(selectedClass);
-    });
+      node.classList.remove(selectedClass)
+    })
 
-    let selectedNode = element.querySelector(`.${nodeClass}.${selectedClass}`);
+    let selectedNode = element.querySelector(`.${nodeClass}.${selectedClass}`)
     while (selectedNode && selectedNode.parentElement) {
       if (selectedNode.classList.contains(nodeClass)) {
-        selectedNode.classList.add(selectedClass);
+        selectedNode.classList.add(selectedClass)
       }
 
-      selectedNode = selectedNode.parentElement;
+      selectedNode = selectedNode.parentElement
     }
 
-    this.updateMenu();
+    this.updateMenu()
   }
 
   getElementRef = ref => {
     if (this.elementRef) {
-      events.off(this.elementRef, 'dxclick');
+      events.off(this.elementRef, 'dxclick')
     }
 
-    this.elementRef = ref;
+    this.elementRef = ref
     events.on(this.elementRef, 'dxclick', e => {
-      this.props.openMenu(e);
-    });
-  };
+      this.props.openMenu(e)
+    })
+  }
 
   updateMenu() {
     if (this.treeView) {
-      this.treeView.selectItem(this.props.selectedItem);
+      this.treeView.selectItem(this.props.selectedItem)
 
       if (this.props.compactMode) {
-        this.treeView.collapseAll();
+        this.treeView.collapseAll()
       }
     }
   }
 
-  onTreeViewReady = (...args) => {
-    this.props.onMenuReady && this.props.onMenuReady(...args);
-    this.updateSelection(...args);
-  }
 }
 
-export default SideNavigationMenu;
+export default SideNavigationMenu

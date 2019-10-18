@@ -1,39 +1,39 @@
-import Drawer from 'devextreme-react/drawer';
-import ScrollView from 'devextreme-react/scroll-view';
-import Toolbar, { Item } from 'devextreme-react/toolbar';
-import React from 'react';
-import { withRouter } from 'react-router';
-import { SideNavigationMenu, Footer } from '../../components';
-import './side-nav-inner-toolbar.scss';
-import { sizes, subscribe, unsubscribe } from '../../utils/media-query';
-import { Template } from 'devextreme-react/core/template';
-import { menuPreInitPatch } from '../../utils/patches';
-import  {Button} from 'devextreme-react'
-import UserPanel from '../../components/user-panel/user-panel'
+import Drawer from 'devextreme-react/drawer'
+import ScrollView from 'devextreme-react/scroll-view'
+import Toolbar, {Item} from 'devextreme-react/toolbar'
+import React from 'react'
+import {withRouter} from 'react-router'
+import {Footer, SideNavigationMenu} from '../../components'
+import './side-nav-inner-toolbar.scss'
+import {sizes, subscribe, unsubscribe} from '../../utils/media-query'
+import {Template} from 'devextreme-react/core/template'
+import {menuPreInitPatch} from '../../utils/patches'
+
 
 class SideNavInnerToolbar extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       menuOpened: sizes()['screen-large'],
       temporaryMenuOpened: false,
+      profileOpened: true,
       ...this.drawerConfig
-    };
+    }
 
-    this.menuPatch = menuPreInitPatch(this);
+    this.menuPatch = menuPreInitPatch(this)
   }
 
   render() {
-    const { menuItems, title, location, userMenuItems } = this.props;
+    const {menuItems, title, location} = this.props
+
     const {
       menuOpened,
       menuMode,
       shaderEnabled,
       menuRevealMode,
       minMenuSize
-    } = this.state;
-
+    } = this.state
     return (
       <div className={'side-nav-inner-toolbar'}>
         <Drawer
@@ -44,7 +44,7 @@ class SideNavInnerToolbar extends React.Component {
           revealMode={menuRevealMode}
           minSize={minMenuSize}
           maxSize={250}
-          height={()=>window.innerHeight}
+          height={() => window.innerHeight}
           shading={shaderEnabled}
           opened={menuOpened}
           template={'menu'}
@@ -53,12 +53,12 @@ class SideNavInnerToolbar extends React.Component {
             <ScrollView className={'layout-body with-footer'}>
               <div className={'content'}>
                 {React.Children.map(this.props.children, item => {
-                  return item.type !== Footer && item;
+                  return item.type !== Footer && item
                 })}
               </div>
               <div className={'content-block'}>
                 {React.Children.map(this.props.children, item => {
-                  return item.type === Footer && item;
+                  return item.type === Footer && item
                 })}
               </div>
             </ScrollView>
@@ -72,12 +72,13 @@ class SideNavInnerToolbar extends React.Component {
               selectedItemChanged={this.navigationChanged}
               openMenu={this.navigationClick}
               onMenuReady={this.menuPatch.onReady}
+              menuOpened={menuOpened}
             >
               <Toolbar id={'navigation-header'}>
                 <Item
                   location={'before'}
                   template={() => {
-                    return '<img src=\'./logo.svg\'/>';
+                    return '<img src=\'./logo.svg\'/>'
                   }}
                   visible={minMenuSize !== 0}
                 />
@@ -92,101 +93,95 @@ class SideNavInnerToolbar extends React.Component {
                     onClick: this.toggleMenu
                   }}
                 />
-                <Item location={'center'} cssClass={'header-title'} text={title} />
+                <Item location={'center'} cssClass={'header-title'} text={title}/>
 
               </Toolbar>
             </SideNavigationMenu>
           </Template>
-          <Button
-            className={'user-button authorization'}
-            id={'button_settings'}
-            stylingMode={'text'}
-          >
-            <UserPanel menuItems={userMenuItems} menuMode={'context'} />
-          </Button>
         </Drawer>
       </div>
-    );
+    )
   }
 
   componentDidMount() {
-    subscribe(this.updateDrawer);
+    subscribe(this.updateDrawer)
   }
 
   componentWillUnmount() {
-    unsubscribe(this.updateDrawer);
+    unsubscribe(this.updateDrawer)
   }
 
   closeDrawer = () => {
     if (!this.state.shaderEnabled) {
-      return false;
+      return false
     }
 
-    this.setState({ menuOpened: false });
-    return true;
+    this.setState({menuOpened: false})
+    return true
   }
 
   updateDrawer = () => {
-    this.setState({ ...this.drawerConfig });
-  };
+    this.setState({...this.drawerConfig})
+  }
 
-  toggleMenu = ({ event }) => {
-    this.setState(({ menuOpened }) => {
-      return { menuOpened: !menuOpened };
-    });
-    event.stopPropagation();
-  };
+  toggleMenu = ({event}) => {
+    this.setState(({menuOpened}) => {
+      return {menuOpened: !menuOpened}
+    })
+    event.stopPropagation()
+  }
+
 
   get drawerConfig() {
-    const isXSmall = sizes()['screen-x-small'];
-    const isLarge = sizes()['screen-large'];
+    const isXSmall = sizes()['screen-x-small']
+    const isLarge = sizes()['screen-large']
 
     return {
       menuMode: isLarge ? 'shrink' : 'overlap',
       menuRevealMode: isXSmall ? 'slide' : 'expand',
       minMenuSize: isXSmall ? 0 : 60,
       shaderEnabled: !isLarge
-    };
+    }
   }
 
   get hideMenuAfterNavigation() {
-    const { menuMode, temporaryMenuOpened } = this.state;
-    return menuMode === 'overlap' || temporaryMenuOpened;
+    const {menuMode, temporaryMenuOpened} = this.state
+    return menuMode === 'overlap' || temporaryMenuOpened
   }
 
   navigationChanged = event => {
-    const path = event.itemData.path;
-    const pointerEvent = event.event;
+    const path = event.itemData.path
+    const pointerEvent = event.event
 
     if (path && this.state.menuOpened) {
       if (event.node.selected) {
-        pointerEvent.preventDefault();
+        pointerEvent.preventDefault()
       } else {
-        this.props.history.push(path);
+        this.props.history.push(path)
       }
 
       if (this.hideMenuAfterNavigation) {
         this.setState({
           menuOpened: false,
           temporaryMenuOpened: false
-        });
-        pointerEvent.stopPropagation();
+        })
+        pointerEvent.stopPropagation()
       }
     } else {
-      pointerEvent.preventDefault();
+      pointerEvent.preventDefault()
     }
-  };
+  }
 
   navigationClick = () => {
-    this.setState(({ menuOpened }) => {
+    this.setState(({menuOpened}) => {
       return !menuOpened
         ? {
           temporaryMenuOpened: true,
           menuOpened: true
         }
-        : {};
-    });
-  };
+        : {}
+    })
+  }
 }
 
-export default withRouter(SideNavInnerToolbar);
+export default withRouter(SideNavInnerToolbar)

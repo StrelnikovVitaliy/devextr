@@ -4469,7 +4469,7 @@
 }
 .dx-swatch-additional .dx-searchbox.dx-editor-filled .dx-icon-search,
 .dx-swatch-additional .dx-searchbox.dx-editor-outlined .dx-icon-search {
-  left: 8px;
+  left: 20px;
 }
 .dx-swatch-additional .dx-rtl .dx-searchbox.dx-editor-filled .dx-icon-search,
 .dx-swatch-additional .dx-rtl .dx-searchbox.dx-editor-outlined .dx-icon-search,
@@ -4482,7 +4482,7 @@
 .dx-swatch-additional .dx-searchbox.dx-editor-outlined .dx-texteditor-input,
 .dx-swatch-additional .dx-searchbox.dx-editor-filled .dx-placeholder:before,
 .dx-swatch-additional .dx-searchbox.dx-editor-outlined .dx-placeholder:before {
-  padding-left: 24px;
+  padding-left: 34px;
 }
 .dx-swatch-additional .dx-rtl .dx-searchbox.dx-editor-filled .dx-texteditor-input,
 .dx-swatch-additional .dx-rtl .dx-searchbox.dx-editor-outlined .dx-texteditor-input,
